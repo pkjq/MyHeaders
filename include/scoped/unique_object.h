@@ -12,7 +12,7 @@ class unique_object final
 {
 public:
 	explicit unique_object(Type &&object, std::function<CloseFuncType> closeFunc):
-		object(std::move(object)), closeFunc(std::move(closeFunc)), valid(true)
+		object(std::forward<Type>(object)), closeFunc(std::move(closeFunc)), valid(true)
 	{}
 
 	explicit unique_object(std::function<CloseFuncType> closeFunc):
@@ -67,12 +67,12 @@ public:
 		valid = false;
 	}
 
-	inline void reset(Type obj)
+	inline void reset(Type &&obj)
 	{
 		if (valid)
 			closeFunc(object);
 
-		object 	= std::move(obj);
+		object 	= std::forward<Type>(obj);
 		valid 	= true;
 	}
 
