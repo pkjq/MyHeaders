@@ -9,15 +9,19 @@
 #define UNUSED_PARAM(param) (void)((param))
 
 
-#define THROW_IF_NOT_EXPRESSION(expression) \
+#define THROW_IF_NOT_EXPRESSION_EX(expression, StreamExceptionClass) \
 	for (;!(expression);) \
-		throw stream_exception::StreamRuntimeError(__LINE__, __FUNCTION__)
+		throw StreamExceptionClass(__LINE__, __FUNCTION__)
 
-#define CHECK(expression) 		THROW_IF_NOT_EXPRESSION((expression)) << "[CHECK]: "
-#define INVARIANT(expression) 	THROW_IF_NOT_EXPRESSION((expression)) << "[INVARIANT]: "
-#define REQUIRE(expression) 	THROW_IF_NOT_EXPRESSION((expression)) << "[REQUIRE]: "
-#define EXPECT(expression) 		THROW_IF_NOT_EXPRESSION((expression)) << "[EXPECT]: "
+#define CHECK_EX(expression, StreamExceptionClass) 		THROW_IF_NOT_EXPRESSION_EX((expression), StreamExceptionClass) << "[CHECK]: "
+#define INVARIANT_EX(expression, StreamExceptionClass) 	THROW_IF_NOT_EXPRESSION_EX((expression), StreamExceptionClass) << "[INVARIANT]: "
+#define REQUIRE_EX(expression, StreamExceptionClass)	THROW_IF_NOT_EXPRESSION_EX((expression), StreamExceptionClass) << "[REQUIRE]: "
+#define EXPECT_EX(expression, StreamExceptionClass) 	THROW_IF_NOT_EXPRESSION_EX((expression), StreamExceptionClass) << "[EXPECT]: "
 		
+#define CHECK(expression) 								CHECK_EX((expression),		stream_exception::StreamRuntimeError)
+#define INVARIANT(expression) 							INVARIANT_EX((expression),	stream_exception::StreamRuntimeError)
+#define REQUIRE(expression) 							REQUIRE_EX((expression),	stream_exception::StreamRuntimeError)
+#define EXPECT(expression) 								EXPECT_EX((expression),		stream_exception::StreamRuntimeError)
 
 
 #ifdef DEBUG
